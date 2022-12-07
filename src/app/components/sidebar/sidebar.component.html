@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <div class="col-auto col-md-3 col-xl-1 px-sm-1 px-0 bg-sidebar">
+      <div
+        class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100"
+      >
+        <a
+          class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+        >
+          <span class="fs-5 d-none d-sm-inline" role="button" routerLink=""
+            ><img
+              src="../../../assets/images/logo.jpg"
+              width="100px"
+              height="100px"
+          /></span>
+        </a>
+        <div class="sidebar-footer">
+          <ul class="list-unstyled">
+            <li routerLink="">Games</li>
+          </ul>
+          <app-time></app-time>
+        </div>
+        <hr />
+      </div>
+    </div>
+    <div class="col py-3">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

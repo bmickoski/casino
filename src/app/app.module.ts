@@ -13,6 +13,7 @@ import { TimeComponent } from './components/time/time.component';
 import { CategoryComponent } from './components/category/category.component';
 import { GridComponent } from './components/grid/grid.component';
 import { SearchComponent } from './components/search/search.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { SearchComponent } from './components/search/search.component';
     CategoryComponent,
     GridComponent,
     SearchComponent,
+    SidebarComponent,
   ],
   imports: [BrowserModule, NgbModule, HttpClientModule, AppRoutingModule],
   providers: [],
