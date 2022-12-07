@@ -1,0 +1,19 @@
+<div
+  [ngClass]="{
+    'category-body-all-rows': showAllRows,
+    'category-body': !showAllRows
+  }"
+>
+  <div
+  role="button"
+    class="card"
+    *ngFor="let item of gridItems"
+    (click)="navigateToGame(item)"
+  >
+    <img
+      [src]="item['game-image']?.src"
+      class="card-img-top"
+      [alt]="item.title"
+    />
+  </div>
+</div>

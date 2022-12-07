@@ -1,0 +1,19 @@
+<section *ngIf="!searchActive">
+  <div *ngFor="let category of gamesByCategory | keyvalue">
+    <h4
+      role="button"
+      class="fw-bold text-white mt-4"
+      (click)="navigateToCategory(category.value.slug)"
+    >
+      <span class="ps-5 pe-5">{{ category.key }}</span>
+      <span>View all {{ category.value["games"].length }} games</span>
+    </h4>
+    <app-grid
+      [gridItems]="category.value['games']"
+      [showAllRows]="false"
+    ></app-grid>
+  </div>
+</section>
+<section *ngIf="searchActive">
+  <app-search [items]="filteredGames"></app-search>
+</section>

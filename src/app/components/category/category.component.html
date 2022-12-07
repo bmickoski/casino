@@ -1,0 +1,6 @@
+<section *ngIf="!searchActive">
+  <app-grid [gridItems]="categoryGames"></app-grid>
+</section>
+<section *ngIf="searchActive">
+  <app-search [items]="filteredGames"></app-search>
+</section>

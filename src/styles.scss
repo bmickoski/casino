@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+
+$primary: #184366;
+$secondary: $yellow-300;
+$success: $green;
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-100;
+$dark: $gray-900;
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+);
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+body {
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background: no-repeat center center / cover;
+  background-attachment: fixed;
+  background-image: linear-gradient(
+      rgba(0, 0, 255, 0.5),
+      rgba(255, 255, 0, 0.397)
+    ),
+    url("./assets/images/majestic-trees.jpg");
+}
