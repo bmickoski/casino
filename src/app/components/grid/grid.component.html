@@ -5,8 +5,11 @@
   }"
 >
   <div
-  role="button"
+    role="button"
     class="card"
+    [ngClass]="{
+      'mb-2 mt-2': !showAllRows
+    }"
     *ngFor="let item of gridItems"
     (click)="navigateToGame(item)"
   >
