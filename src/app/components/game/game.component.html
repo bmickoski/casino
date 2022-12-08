@@ -1,5 +1,5 @@
 <a role="button" class="text-warning" (click)="closeGame()">[X]</a>
-<div class="video_wrapper">
+<div class="video_wrapper" *ngIf="gameUrl">
   <iframe
     frameborder="0"
     width="100%"
