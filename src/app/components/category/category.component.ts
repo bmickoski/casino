@@ -1,4 +1,3 @@
-import { SearchService } from 'src/app/services/search.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import {
   debounceTime,
@@ -6,9 +5,11 @@ import {
   filter,
   forkJoin,
   mergeMap,
+  Subscription,
 } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from './../../services/data.service';
+import { SearchService } from 'src/app/services/search.service';
 import { Category } from 'src/app/models/category.model';
 import { GameResponse } from 'src/app/models/game-response.model';
 import { UtilService } from 'src/app/services/util.service';
@@ -19,22 +20,24 @@ import { Game } from 'src/app/models/game.model';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss'],
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent implements OnInit, OnDestroy {
   categories!: Category[];
   games!: GameResponse;
   categoryGames: Game[] = [];
   filteredGames: Game[] = [];
   slug!: string;
   searchActive: boolean = false;
+  searchSubscription!: Subscription;
+  routeSubscription!: Subscription;
 
   constructor(
-    private dataService: DataService,
-    private utilService: UtilService,
     route: ActivatedRoute,
     router: Router,
+    private dataService: DataService,
+    private utilService: UtilService,
     private searchService: SearchService
   ) {
-    router.events
+    this.routeSubscription = router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         this.slug = route.snapshot.paramMap.get('id') || '';
@@ -45,16 +48,12 @@ export class CategoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.searchService.searchSubject
+    this.searchSubscription = this.searchService.searchSubject
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        mergeMap((searchQuery) => {
-          if (searchQuery) {
-            this.searchActive = true;
-          } else {
-            this.searchActive = false;
-          }
+        mergeMap((searchQuery: string) => {
+          this.searchActive = searchQuery ? true : false;
           return this.searchService.filterGamesBySearch(
             this.games,
             searchQuery
@@ -67,18 +66,28 @@ export class CategoryComponent implements OnInit {
     this.getData();
   }
 
+  ngOnDestroy(): void {
+    this.searchSubscription?.unsubscribe();
+    this.routeSubscription?.unsubscribe();
+  }
+
   getData() {
     forkJoin([
       this.dataService.getCategories(),
       this.dataService.getGames(),
-    ]).subscribe((res: any) => {
-      this.categories = res[0];
-      this.games = res[1];
-      this.categoryGames = this.utilService.getGamesByCategory(
-        this.categories,
-        this.games,
-        this.slug
-      );
+    ]).subscribe({
+      next: ([categories, games]: [Category[], GameResponse]) => {
+        this.categories = categories;
+        this.games = games;
+        this.categoryGames = this.utilService.getGamesByCategory(
+          this.categories,
+          this.games,
+          this.slug
+        );
+      },
+      error: (err) => {
+        console.log('Error', err);
+      },
     });
   }
 }

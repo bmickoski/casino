@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { debounceTime, distinctUntilChanged, forkJoin, mergeMap } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  forkJoin,
+  mergeMap,
+  Subscription,
+} from 'rxjs';
 import { Router } from '@angular/router';
 
 import { Category } from 'src/app/models/category.model';
@@ -14,7 +20,7 @@ import { CategoryGame } from 'src/app/models/category-game.model';
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
   categories!: Category[];
   games!: GameResponse;
   gamesByCategory: CategoryGame = {};
@@ -22,6 +28,7 @@ export class OverviewComponent implements OnInit {
   searchText: string = '';
   searchActive: boolean = false;
   filteredGames!: any[];
+  searchSubscription!: Subscription;
 
   constructor(
     private dataService: DataService,
@@ -31,7 +38,7 @@ export class OverviewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.searchService.searchSubject
+    this.searchSubscription = this.searchService.searchSubject
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
@@ -54,6 +61,10 @@ export class OverviewComponent implements OnInit {
     this.getData();
   }
 
+  ngOnDestroy(): void {
+    this.searchSubscription?.unsubscribe();
+  }
+
   getData() {
     forkJoin([
       this.dataService.getCategories(),
@@ -65,7 +76,6 @@ export class OverviewComponent implements OnInit {
         this.categories,
         this.games
       );
-      this.test = this.gamesByCategory[Object.keys(this.gamesByCategory)[0]];
     });
   }
 
